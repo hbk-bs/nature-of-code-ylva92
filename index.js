@@ -23,7 +23,6 @@ class Crack {
     this.lastBranchPoint = 0; // Letzte Position an der ein Zweig entstanden ist
   }
 
-  // Einen Schritt wachsen
   grow() {
     if (!this.isGrowing) return;
     
@@ -49,7 +48,7 @@ class Crack {
     // Erzeuge temporären Punkt für Kollisionsprüfung
     let nextPoint = { x: nextX, y: nextY };
     
-    // Prüfe, ob der neue Punkt eine Kollision verursachen würde (auch mit Rändern)
+    // Prüfe Kollision
     if (this.checkCollision(nextPoint)) {
       this.isGrowing = false;
       return;
@@ -59,10 +58,53 @@ class Crack {
     this.points.push(nextPoint);
     this.currentLength += this.growthSpeed;
     
+    // Chance für neue Verzweigung (jetzt für alle Risse, nicht nur den Hauptriss)
+    // Reduziere die Wahrscheinlichkeit mit zunehmender "Generation"
+    let generation = this.getGeneration();
+    let branchProbability = 0.05 / (generation + 1);
+    
+    if (random() < branchProbability && cracks.length < maxCracks) {
+        let branchStart = nextPoint;
+        // Wähle Winkel basierend auf der Generation
+        let baseAngle = PI/4; // 45 Grad
+        let angle = (random() < 0.5) ? baseAngle : -baseAngle;
+        
+        // Reduziere die Länge mit zunehmender Generation
+        let length = random(50, 150) / (generation + 1);
+        
+        let branchDirection = createVector(dirX, dirY);
+        branchDirection.normalize();
+        branchDirection.rotate(angle);
+        branchDirection.mult(length);
+        
+        let branchEnd = {
+            x: branchStart.x + branchDirection.x,
+            y: branchStart.y + branchDirection.y
+        };
+        
+        // Verzweigung innerhalb der Canvas halten
+        branchEnd.x = constrain(branchEnd.x, 0, width);
+        branchEnd.y = constrain(branchEnd.y, 0, height);
+        
+        // Neue Verzweigung erstellen
+        cracks.push(new Crack(branchStart, branchEnd, this, this.points.length - 1));
+    }
+
     // Prüfe, ob der Riss fertig ist
     if (this.currentLength >= this.totalLength) {
       this.isGrowing = false;
     }
+  }
+
+  // Neue Methode: Berechne die "Generation" des Risses
+  getGeneration() {
+    let generation = 0;
+    let currentCrack = this;
+    while (currentCrack.parent !== null) {
+      generation++;
+      currentCrack = currentCrack.parent;
+    }
+    return generation;
   }
 
   // Prüfe, ob dieser Riss eine neue Verzweigung erzeugen sollte
@@ -123,21 +165,26 @@ class Crack {
     
     // Prüfe Kollision mit allen Rissen
     for (let crack of cracks) {
-      // Überspringe sich selbst und den Eltern-Riss
-      if (crack === this || crack === this.parent) continue;
+      // Überspringe sich selbst
+      if (crack === this) continue;
       
-      // Überspringe die ersten Punkte bei Verzweigungen
-      let startIdx = crack === this.parent ? this.parentIndex + 2 : 0;
-      
-      // Prüfe jeden Liniensegment des Risses
-      for (let i = startIdx; i < crack.points.length - 1; i++) {
-        let p1 = crack.points[i];
-        let p2 = crack.points[i + 1];
-        
-        // Prüfe Abstand zum Liniensegment
-        let d = distToSegment(newPoint, p1, p2);
-        if (d < 5) { // Kollisionsabstand
-          return true;
+      // Wenn dieser Riss später erstellt wurde als der andere,
+      // erlauben wir die Kollision und der aktuelle Riss stoppt
+      if (cracks.indexOf(this) > cracks.indexOf(crack)) {
+        for (let i = 0; i < crack.points.length - 1; i++) {
+          let p1 = crack.points[i];
+          let p2 = crack.points[i + 1];
+          
+          // Prüfe Abstand zum Liniensegment
+          let d = distToSegment(newPoint, p1, p2);
+          if (d < 5) { // Kollisionsabstand
+            // Setze den letzten Punkt genau auf den Kollisionspunkt
+            this.points.push({
+              x: newPoint.x,
+              y: newPoint.y
+            });
+            return true;
+          }
         }
       }
     }
@@ -228,7 +275,50 @@ function createMainCrack() {
   
   // Hauptriss erstellen und zum Array hinzufügen
   cracks = []; // Alle vorherigen Risse löschen
-  cracks.push(new Crack(startPoint, endPoint));
+  let mainCrack = new Crack(startPoint, endPoint);
+  cracks.push(mainCrack);
+
+  // Warte einen Frame, damit der Hauptriss einige Punkte generieren kann
+  setTimeout(() => {
+    // Berechne die Hauptrichtung des Risses
+    let mainDirection = createVector(
+      endPoint.x - startPoint.x,
+      endPoint.y - startPoint.y
+    ).normalize();
+
+    // Erstelle 5 Verzweigungen
+    for (let i = 0; i < 5; i++) {
+      // Position entlang des Hauptrisses (20-80% der Länge)
+      let t = map(i, 0, 4, 0.2, 0.8);
+      let branchStartIdx = floor(t * mainCrack.points.length);
+      
+      if (branchStartIdx < mainCrack.points.length) {
+        let branchStart = mainCrack.points[branchStartIdx];
+        
+        // Alterniere zwischen +45 und -45 Grad
+        let angle = (i % 2 === 0) ? PI/4 : -PI/4;  // ±45 Grad
+        let length = random(50, 150);
+        
+        // Rotiere den Hauptrichtungsvektor um den gewählten Winkel
+        let branchDirection = createVector(mainDirection.x, mainDirection.y);
+        branchDirection.rotate(angle);
+        branchDirection.mult(length);
+        
+        let branchEnd = {
+          x: branchStart.x + branchDirection.x,
+          y: branchStart.y + branchDirection.y
+        };
+        
+        // Verzweigung innerhalb der Canvas halten
+        branchEnd.x = constrain(branchEnd.x, 0, width);
+        branchEnd.y = constrain(branchEnd.y, 0, height);
+        
+        // Neue Verzweigung erstellen
+        cracks.push(new Crack(branchStart, branchEnd, mainCrack, branchStartIdx));
+      }
+    }
+  }, 100); // Kurze Verzögerung, damit der Hauptriss sich entwickeln kann
+
   framesSinceStart = 0;
 }
 
