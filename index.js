@@ -16,7 +16,9 @@ class Crack {
     this.growthSpeed = random(3, 7);
     this.wobbleAmount = random(3, 8);
     this.wobbleFrequency = random(0.05, 0.15);
-    this.color = color(random(80, 120));
+    this.color = color(random(101, 67, 33), // Dark brown base
+                      random(80, 120),      // Vary the darkness
+                      random(30, 60));      // Keep it earthen
     this.isGrowing = true;
     this.parent = parent; // Referenz zum Eltern-Riss (null für Hauptriss)
     this.parentIndex = parentIndex; // Index im Eltern-Riss, wo dieser Riss abzweigt
@@ -323,42 +325,51 @@ function createMainCrack() {
 }
 
 function setup() {
-  createCanvas(600, 400);
-  createMainCrack();
+    // Create canvas inside the canvasContainer
+    let canvas = createCanvas(800, 600);
+    canvas.parent('canvasContainer');
+    
+    // Set background color to match website theme
+    background(244, 241, 234);
+    
+    // Start first crack
+    createMainCrack();
 }
 
 function draw() {
-  background(220);
-  framesSinceStart++;
-  
-  // Wachstum und Verzweigung für alle Risse
-  for (let i = 0; i < cracks.length; i++) {
-    let crack = cracks[i];
+    // Use a more earth-toned background
+    background(244, 241, 234);
     
-    // Riss wachsen lassen
-    if (crack.isGrowing) {
-      crack.grow();
+    framesSinceStart++;
+  
+    // Wachstum und Verzweigung für alle Risse
+    for (let i = 0; i < cracks.length; i++) {
+      let crack = cracks[i];
       
-      // Prüfe, ob eine neue Verzweigung entstehen soll
-      if (crack.shouldBranch()) {
-        crack.createBranch();
+      // Riss wachsen lassen
+      if (crack.isGrowing) {
+        crack.grow();
+        
+        // Prüfe, ob eine neue Verzweigung entstehen soll
+        if (crack.shouldBranch()) {
+          crack.createBranch();
+        }
       }
     }
-  }
-  
-  // Alle Risse zeichnen
-  for (let crack of cracks) {
-    crack.draw();
-  }
-  
-  // Prüfe, ob alle Risse fertig sind
-  let allFinished = true;
-  for (let crack of cracks) {
-    if (crack.isGrowing) {
-      allFinished = false;
-      break;
+    
+    // Alle Risse zeichnen
+    for (let crack of cracks) {
+      crack.draw();
     }
-  }
+    
+    // Prüfe, ob alle Risse fertig sind
+    let allFinished = true;
+    for (let crack of cracks) {
+      if (crack.isGrowing) {
+        allFinished = false;
+        break;
+      }
+    }
 }
 
 function mousePressed() {

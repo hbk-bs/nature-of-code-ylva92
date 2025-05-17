@@ -1,18 +1,61 @@
-
-
-
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-  <title>Ausgetrockneter Boden</title>
-  <style>
-    body { margin: 0; overflow: hidden; background-color: #f0f0f0; }
-    canvas { display: block; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufbrechen des Bodens</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f1ea;
+            font-family: Verdana, sans-serif;  /* Geändert zu Verdana */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #403c35;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        canvas {
+            border: 1px solid #403c35;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .container {
+            text-align: center;
+        }
+        p {
+            color: #666;
+            margin-top: 20px;
+        }
+        .description {
+            max-width: 800px;
+            margin: 40px auto;
+            line-height: 1.6;
+            text-align: left;
+            text-decoration: none;
+            color: #403c35;
+            display: block;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="dryGroundCanvas"></canvas>
-  <script src="lib/p5.min.js"></script>
-  <script src="index.js"></script>
+    <div class="container">
+        <h1>Aufbrechen des Bodens</h1>
+        <div id="canvasContainer"></div>
+        <p>Klicken Sie, um die Simulation neu zu starten</p>
+        <a href="#" class="description">
+            Exkursion auf Amrum. Es wurden Naturbewegungen beobachtet, entdeckt und festgehalten. Basierend auf den Arbeiten von David Shiffmans "Nature of Code" übersetzten wir unsere Zeichnungen und Fotos in Code. Ziel war es, diese natürlichen Bewegungen zu abstrahieren und die grundlegenden Muster zu zeigen.<br><br>
+            
+            Ich habe das Aufbrechen des Sandes unter meinen Füßen beobachtet. Die Oberfläche war ausgetrocknet und durch die Einwirkung meines Gewichts wurden die Sandteilchen komprimiert. Durch die Abwesenheit von Feuchtigkeit fehlt es dem Sand an Stabilität.<br><br>
+            
+            Diese scheinbar zufälligen Risse zu animieren, stellte sich als recht schwierig heraus. Da wir mit KI arbeiteten, stand die Recherche an erster Stelle. Um meine Worte und Gedanken in Code zu fassen, musste ich erst verstehen, was da überhaupt geschieht. Ein zweiter wichtiger Punkt war das Schritt für Schritt vorgehen. Wenn man der KI das gewünschte Endergebnis beschreibt, kommt als Code nichts brauchbares dabei rum. Ich musste lernen, alles nacheinander zu beschreiben und die einzelnen Schritte zu verbessern.
+        </a>
+    </div>
+    <script src="lib/p5.min.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
