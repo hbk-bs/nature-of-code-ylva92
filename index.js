@@ -1,5 +1,5 @@
 let cracks = []; // Array für alle Risse (Hauptriss und Verzweigungen)
-let thickness = 3;
+let thickness = 1; // Geändert von 3 auf 2
 let framesSinceStart = 0;
 let branchProbability = 0.01; // Wahrscheinlichkeit für neue Verzweigungen
 let minBranchingDistance = 20; // Mindestabstand zwischen Verzweigungen
@@ -16,9 +16,7 @@ class Crack {
     this.growthSpeed = random(3, 7);
     this.wobbleAmount = random(3, 8);
     this.wobbleFrequency = random(0.05, 0.15);
-    this.color = color(random(101, 67, 33), // Dark brown base
-                      random(80, 120),      // Vary the darkness
-                      random(30, 60));      // Keep it earthen
+    this.color = color(0); // Schwarz statt Brauntöne
     this.isGrowing = true;
     this.parent = parent; // Referenz zum Eltern-Riss (null für Hauptriss)
     this.parentIndex = parentIndex; // Index im Eltern-Riss, wo dieser Riss abzweigt
@@ -326,19 +324,19 @@ function createMainCrack() {
 
 function setup() {
     // Create canvas inside the canvasContainer
-    let canvas = createCanvas(800, 600);
+    let canvas = createCanvas(600, 400);
     canvas.parent('canvasContainer');
     
-    // Set background color to match website theme
-    background(244, 241, 234);
+    // Set background color to darker beige
+    background(235, 225, 205);  // Darker beige RGB color
     
     // Start first crack
     createMainCrack();
 }
 
 function draw() {
-    // Use a more earth-toned background
-    background(244, 241, 234);
+    // Use same darker beige background
+    background(235, 225, 205);  // Darker beige RGB color
     
     framesSinceStart++;
   
