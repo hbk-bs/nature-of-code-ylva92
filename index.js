@@ -323,14 +323,25 @@ function createMainCrack() {
 }
 
 function setup() {
-    // Create canvas inside the canvasContainer
-    let canvas = createCanvas(600, 400);
+    // Create responsive canvas
+    let canvasWidth = Math.min(windowWidth - 40, 800);
+    let canvasHeight = Math.min(windowHeight - 200, 600);
+    let canvas = createCanvas(canvasWidth, canvasHeight);
     canvas.parent('canvasContainer');
     
     // Set background color to darker beige
-    background(235, 225, 205);  // Darker beige RGB color
+    background(235, 225, 205);
     
     // Start first crack
+    createMainCrack();
+}
+
+// Add window resize handler
+function windowResized() {
+    let canvasWidth = Math.min(windowWidth - 40, 800);
+    let canvasHeight = Math.min(windowHeight - 200, 600);
+    resizeCanvas(canvasWidth, canvasHeight);
+    background(235, 225, 205);
     createMainCrack();
 }
 
