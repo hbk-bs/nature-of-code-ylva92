@@ -60,50 +60,39 @@
             color: #403c35;
             border-top: 10px
         }
+        #backlink {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: 1px solid #403c35;
+            background-color: #f4f1ea;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        #backlink a {
+            text-decoration: none;
+            color: #403c35;
+            font-family: Verdana, sans-serif;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            transition: color 0.2s ease-in-out;
+        }
+
+        #backlink:hover {
+            background-color: #403c35;
+        }
+
+        #backlink a:hover {
+            color: #f4f1ea;
+        }
     </style>
 </head>
 	<div id="backlink">
-		<style>
-			#backlink {
-				--color-accent: hsl(198, 100%, 50%);
-				position: absolute;
-				top: 8px;
-				right: 8px;
-				border: 1px dashed black;
-				background-color: white;
-				padding: 8px;
-				cursor: pointer;
-				color: black;
-				font-size: 0.8rem;
-				font-weight: bold;
-				transition: all 0.3s ease;
-				transform: rotate(-2deg) scale(0.9);
-				box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-				a {
-					text-decoration: none;
-					color: black;
-					color: inherit;
-					text-decoration: underline;
-					background-image: linear-gradient(to right,
-							var(--color-accent) 0%,
-							var(--color-accent) 100%);
-					background-size: 0% 100%;
-					background-position: left center;
-					background-repeat: no-repeat;
-					transition: background-size 0.2s ease-in-out;
-					padding: 0.5rem;
-				}
-				a:hover {
-					background-size: 100% 100%;
-					color: white;
-				}
-
-			}
-			#backlink:hover {
-				transform: rotate(2deg) scale(1);
-			}
-		</style>
-		<a href="https://rundgang2025.qawsed.site">Back to the Rundgang 2025</a>
+		<a href="https://hbk-bs.github.io/documentation-2025-ylva92/">meine Doku</a>
 	</div>
 <body>
 
@@ -123,7 +112,7 @@
     <script src="lib/p5.min.js"></script>
     <script src="index.js"></script>
     <footer class="footer">
-        HBK Braunschweig l digitale Grundlagen 2 l Ylva Beischall
+        HBK Braunschweig - digitale Grundlagen 2 - Ylva Beischall
     </footer>
 </body>
 </html>
